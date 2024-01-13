@@ -34,20 +34,23 @@ def img_landmarks(rgb_image, detection_results: mp.tasks.vision.HandLandmarkerRe
         return rgb_image
 
 
-cap = cv2.VideoCapture(0)
-model = HandLocation.HandLocation()
+def main():
+    cap = cv2.VideoCapture(0)
+    model = HandLocation.HandLocation()
 
-while True:
-    ret, frame = cap.read()
+    while True:
+        ret, frame = cap.read()
 
-    model.detect_async(frame)
-    frame = img_landmarks(frame, model.result)
+        model.detect_async(frame)
+        frame = img_landmarks(frame, model.result)
 
-    cv2.imshow('Vid', frame)
+        cv2.imshow('Vid', frame)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
-model.close()
-cap.release()
-cv2.destroyAllWindows()
+    model.close()
+    cap.release()
+    cv2.destroyAllWindows()
+
+main()

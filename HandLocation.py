@@ -13,10 +13,6 @@ class HandLocation():
         def update_result(result: mp.tasks.vision.HandLandmarkerResult, output_image: mp.Image, timestamp_ms: int):
             self.result = result
 
-        BaseOptions = mp.tasks.BaseOptions
-        RunningMode = mp.tasks.vision.RunningMode
-        HandLandmarkerOptions = mp.tasks.vision.HandLandmarkerOptions
-
         options = mp.tasks.vision.HandLandmarkerOptions(
             base_options=mp.tasks.BaseOptions(model_asset_path="hand_landmarker.task"),
             running_mode=mp.tasks.vision.RunningMode.LIVE_STREAM,
