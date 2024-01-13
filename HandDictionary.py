@@ -7,6 +7,10 @@ import math
 import os
 from PIL import Image
 
+import mediapipe as mp
+from mediapipe.tasks import python
+from mediapipe.tasks.python import vision
+
 def process_photos(folder_path):
     # List all files in the specified folder
     files = os.listdir(folder_path)
@@ -22,20 +26,6 @@ def process_photos(folder_path):
             image = Image.open(image_path)
 
             # Process the image (you can add your own image processing logic here)
-            DESIRED_HEIGHT = 480
-            DESIRED_WIDTH = 480
-
-            def resize_and_show(image):
-                h, w = image.shape[:2]
-                if h < w:
-                    img = cv2.resize(image, (DESIRED_WIDTH, math.floor(h / (w / DESIRED_WIDTH))))
-                else:
-                    img = cv2.resize(image, (math.floor(w / (h / DESIRED_HEIGHT)), DESIRED_HEIGHT))
-
-            images = {name: cv2.imread(name) for name in folder_path}
-            for name, image in images.items():
-                print(name)
-                resize_and_show(image)
 
             # Example: Display the image size
             print(f"Image: {file}, Size: {image.size}")
