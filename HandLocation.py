@@ -1,6 +1,9 @@
 import mediapipe as mp
 import time
 
+import numpy as np
+from mediapipe.framework.formats import landmark_pb2
+
 
 class HandLocation:
 
@@ -18,7 +21,7 @@ class HandLocation:
         HandLandmarkerOptions = mp.tasks.vision.HandLandmarkerOptions
 
         options = HandLandmarkerOptions(
-            base_options=BaseOptions(model_asset_path="model.task"),
+            base_options=BaseOptions(model_asset_path="hand_landmarker.task"),
             running_mode=RunningMode.LIVE_STREAM,
             num_hands=2,
             min_hand_detection_confidence=0.3,
@@ -34,3 +37,6 @@ class HandLocation:
 
     def close(self):
         self.location.close()
+
+
+
