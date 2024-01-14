@@ -11,7 +11,10 @@ def recognize_words(text):
     nlp = spacy.load("en_core_web_sm")
     doc = nlp(text)
     words = [token.text for token in doc]
-    return words
+    string = ""
+    for i in words:
+        string += i
+    return string
 
 
 def img_landmarks(rgb_image, detection_results: mp.tasks.vision.HandLandmarkerResult):
@@ -47,13 +50,17 @@ def main():
     options = mp.tasks.vision.GestureRecognizerOptions(
         base_options=mp.tasks.BaseOptions(model_asset_path="exported_model/gesture_recognizer.task"),
         running_mode=mp.tasks.vision.RunningMode.IMAGE,
+        min_hand_detection_confidence=0.6,
+        min_hand_presence_confidence=0.6,
+        min_tracking_confidence=0.6,
         )
 
     recognizer = mp.tasks.vision.GestureRecognizer.create_from_options(options)
 
     cap = cv2.VideoCapture(0)
     model = HandLocation.HandLocation()
-    sentence = ""
+    sentence = " "
+    index = 0
     while True:
         ret, frame = cap.read()
         frame = cv2.flip(frame, 1)
@@ -64,7 +71,9 @@ def main():
         gest_result = recognizer.recognize(mp_image).gestures
         for gesture in gest_result:
             gest_type = [category.category_name for category in gesture]
-            sentence += str(gest_type[0]) + " "
+            if sentence[index] != str(gest_type[0]):
+                sentence += str(gest_type[0])
+                index = len(sentence)-1
             cv2.putText(frame, text=gest_type[0], org=(50,50), fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale=1.0, color=(0, 255, 155))
 
         frame = img_landmarks(frame, model.result)
