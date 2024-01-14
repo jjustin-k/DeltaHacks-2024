@@ -35,6 +35,15 @@ def img_landmarks(rgb_image, detection_results: mp.tasks.vision.HandLandmarkerRe
 
 
 def main():
+    def print_result(result: mp.tasks.vision.GestureRecognizerResult, output_image: mp.Image, timestamp_ms: int):
+        print('gesture recognition result: {}'.format(result))
+
+    options = mp.tasks.vision.GestureRecognizerOptions(
+        base_options=mp.tasks.BaseOptions(model_asset_path="gesture_recognizer.task"),
+        running_mode=mp.tasks.vision.RunningMode.IMAGE,)
+
+    recognizer = mp.tasks.vision.GestureRecognizer.create_from_options(options)
+
     cap = cv2.VideoCapture(0)
     model = HandLocation.HandLocation()
 
@@ -42,6 +51,9 @@ def main():
         ret, frame = cap.read()
 
         model.detect_async(frame)
+        mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
+        gest_result = recognizer.recognize(mp_image)
+        print(gest_result.gestures)
         frame = img_landmarks(frame, model.result)
 
         cv2.imshow('Vid', frame)
@@ -52,5 +64,6 @@ def main():
     model.close()
     cap.release()
     cv2.destroyAllWindows()
+
 
 main()

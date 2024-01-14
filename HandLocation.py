@@ -7,6 +7,7 @@ class HandLocation():
     def __init__(self):
         self.result = mp.tasks.vision.HandLandmarkerResult
         self.location = mp.tasks.vision.HandLandmarker
+        self.recognizer = mp.tasks.vision.GestureRecognizer
         self.create_landmark()
 
     def create_landmark(self):
