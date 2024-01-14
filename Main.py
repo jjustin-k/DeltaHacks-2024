@@ -56,6 +56,10 @@ def main():
         print(gest_result.gestures)
         frame = img_landmarks(frame, model.result)
 
+        #if gest_result:
+            #cv2.putText(frame, text=gest_result.gestures)
+            #cv2.putText(frame, text=gest_result.gestures[4], org=6, fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale=1.0, color=(255, 255, 255))
+
         cv2.imshow('Vid', frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
