@@ -6,6 +6,14 @@ import mediapipe as mp
 import numpy as np
 import gtts
 from playsound import playsound
+import spacy
+
+
+def recognize_words(text):
+    nlp = spacy.load("en_core_web_sm")
+    doc = nlp(text)
+    words = [token.text for token in doc]
+    return words
 
 
 def speak(sentence: str):
