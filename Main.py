@@ -1,3 +1,6 @@
+import dataclasses
+import locale
+
 import cv2
 from mediapipe.framework.formats import landmark_pb2
 from mediapipe.tasks.python import vision
@@ -40,7 +43,8 @@ def main():
 
     options = mp.tasks.vision.GestureRecognizerOptions(
         base_options=mp.tasks.BaseOptions(model_asset_path="gesture_recognizer.task"),
-        running_mode=mp.tasks.vision.RunningMode.IMAGE,)
+        running_mode=mp.tasks.vision.RunningMode.IMAGE,
+        )
 
     recognizer = mp.tasks.vision.GestureRecognizer.create_from_options(options)
 
@@ -49,18 +53,19 @@ def main():
 
     while True:
         ret, frame = cap.read()
+        frame = cv2.flip(frame, 1)
 
         model.detect_async(frame)
         mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
-        gest_result = recognizer.recognize(mp_image)
-        print(gest_result.gestures)
+
+        gest_result = recognizer.recognize(mp_image).gestures
+        for gesture in gest_result:
+            gest_type = [category.category_name for category in gesture]
+            cv2.putText(frame, text=gest_type[0], org=(50,50), fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale=1.0, color=(0, 255, 155))
+
         frame = img_landmarks(frame, model.result)
 
-        #if gest_result:
-            #cv2.putText(frame, text=gest_result.gestures)
-            #cv2.putText(frame, text=gest_result.gestures[4], org=6, fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale=1.0, color=(255, 255, 255))
-
-        cv2.imshow('Vid', frame)
+        cv2.imshow('vid', frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
