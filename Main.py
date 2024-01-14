@@ -4,8 +4,6 @@ from mediapipe.tasks.python import vision
 import HandLocation
 import mediapipe as mp
 import numpy as np
-import gtts
-from playsound import playsound
 import spacy
 
 
@@ -14,13 +12,6 @@ def recognize_words(text):
     doc = nlp(text)
     words = [token.text for token in doc]
     return words
-
-
-def speak(sentence: str):
-    speech = gtts.gTTS(text=sentence, lang='en', slow=False)
-    speech.save("speech_files/speech.mp3")
-    playsound("speech_files/speech.mp3")
-    return
 
 
 def img_landmarks(rgb_image, detection_results: mp.tasks.vision.HandLandmarkerResult):
@@ -86,7 +77,7 @@ def main():
     model.close()
     cap.release()
     cv2.destroyAllWindows()
-    speak(sentence)
+    print(recognize_words(sentence))
 
 
 main()
