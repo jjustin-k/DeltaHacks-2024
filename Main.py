@@ -6,13 +6,12 @@ import mediapipe as mp
 import numpy as np
 import gtts
 from playsound import playsound
-import tensorflow as tp
 
 
 def speak(sentence: str):
     speech = gtts.gTTS(text=sentence, lang='en', slow=False)
-    speech.save("speech.mp3")
-    playsound("speech.mp3")
+    speech.save("speech_files/speech.mp3")
+    playsound("speech_files/speech.mp3")
     return
 
 
@@ -68,7 +67,7 @@ def main():
             gest_type = [category.category_name for category in gesture]
             sentence += str(gest_type[0]) + " "
             cv2.putText(frame, text=gest_type[0], org=(50,50), fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale=1.0, color=(0, 255, 155))
-            print(sentence)
+
         frame = img_landmarks(frame, model.result)
 
         cv2.imshow('vid', frame)
