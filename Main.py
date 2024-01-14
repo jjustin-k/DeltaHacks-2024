@@ -46,7 +46,7 @@ def img_landmarks(rgb_image, detection_results: mp.tasks.vision.HandLandmarkerRe
 def main():
 
     options = mp.tasks.vision.GestureRecognizerOptions(
-        base_options=mp.tasks.BaseOptions(model_asset_path="gesture_recognizer.task"),
+        base_options=mp.tasks.BaseOptions(model_asset_path="exported_model/gesture_recognizer.task"),
         running_mode=mp.tasks.vision.RunningMode.IMAGE,
         )
 

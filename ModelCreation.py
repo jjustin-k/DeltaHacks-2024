@@ -30,13 +30,15 @@ for label in labels:
 
 data = gesture_recognizer.Dataset.from_folder(
     dirname=dataset_path,
-    hparams=gesture_recognizer.HandDataPreprocessingParams(),
+    hparams=gesture_recognizer.HandDataPreprocessingParams()
+
 )
 train_data, rest_data = data.split(0.8)
 confirmation_data, testing_data = rest_data.split(0.5)
 
 hparams = gesture_recognizer.HParams(export_dir="exported_model")
 options = gesture_recognizer.GestureRecognizerOptions(hparams=hparams)
+
 model = gesture_recognizer.GestureRecognizer.create(
     train_data=train_data,
     validation_data=confirmation_data,
@@ -45,3 +47,5 @@ model = gesture_recognizer.GestureRecognizer.create(
 
 loss, acc = model.evaluate(testing_data, batch_size=1)
 print(f"Test loss:{loss}, Test accuracy:{acc}")
+
+model.export_model()
