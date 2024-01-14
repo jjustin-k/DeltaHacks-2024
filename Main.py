@@ -1,12 +1,19 @@
-import dataclasses
-import locale
-
 import cv2
 from mediapipe.framework.formats import landmark_pb2
 from mediapipe.tasks.python import vision
 import HandLocation
 import mediapipe as mp
 import numpy as np
+import gtts
+from playsound import playsound
+import tensorflow as tp
+
+
+def speak(sentence: str):
+    speech = gtts.gTTS(text=sentence, lang='en', slow=False)
+    speech.save("speech.mp3")
+    playsound("speech.mp3")
+    return
 
 
 def img_landmarks(rgb_image, detection_results: mp.tasks.vision.HandLandmarkerResult):
@@ -38,8 +45,6 @@ def img_landmarks(rgb_image, detection_results: mp.tasks.vision.HandLandmarkerRe
 
 
 def main():
-    def print_result(result: mp.tasks.vision.GestureRecognizerResult, output_image: mp.Image, timestamp_ms: int):
-        print('gesture recognition result: {}'.format(result))
 
     options = mp.tasks.vision.GestureRecognizerOptions(
         base_options=mp.tasks.BaseOptions(model_asset_path="gesture_recognizer.task"),
@@ -50,7 +55,7 @@ def main():
 
     cap = cv2.VideoCapture(0)
     model = HandLocation.HandLocation()
-
+    sentence = ""
     while True:
         ret, frame = cap.read()
         frame = cv2.flip(frame, 1)
@@ -61,8 +66,9 @@ def main():
         gest_result = recognizer.recognize(mp_image).gestures
         for gesture in gest_result:
             gest_type = [category.category_name for category in gesture]
+            sentence += str(gest_type[0]) + " "
             cv2.putText(frame, text=gest_type[0], org=(50,50), fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale=1.0, color=(0, 255, 155))
-
+            print(sentence)
         frame = img_landmarks(frame, model.result)
 
         cv2.imshow('vid', frame)
@@ -73,6 +79,7 @@ def main():
     model.close()
     cap.release()
     cv2.destroyAllWindows()
+    speak(sentence)
 
 
 main()
